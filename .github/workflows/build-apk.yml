@@ -34,6 +34,7 @@ jobs:
           cp -r android-res/. android/app/src/main/res/
           sed -i 's/android:name=".MainActivity"/android:name=".MainActivity" android:screenOrientation="sensorLandscape"/' android/app/src/main/AndroidManifest.xml
           grep -q sensorLandscape android/app/src/main/AndroidManifest.xml
+          cp android-src/MainActivity.java android/app/src/main/java/app/cornershop/english/MainActivity.java
 
       - name: Copy game into the app
         run: npx cap sync android
