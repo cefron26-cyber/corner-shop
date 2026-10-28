@@ -1,0 +1,8 @@
+{
+  "appId": "app.cornershop.english",
+  "appName": "Corner Shop",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#3a9e9a"
+  }
+}
