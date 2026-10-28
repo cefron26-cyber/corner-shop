@@ -148,6 +148,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       // covers the top of the eye with skin and draws the lid line
       var a, b;
       if (kind === 'half') { a = EY - 1; b = EY - 1; }
+      else if (kind === 'heavy') { a = EY + 4; b = EY + 4; } // only a sliver of eye left
       else { a = side < 0 ? EY - 7 : EY - 1; b = side < 0 ? EY - 1 : EY - 7; } // angry: inner corner lower
       return F('M' + (x - 11) + ' ' + (EY - 14) + ' H' + (x + 11) + ' V' + b + ' L' + (x - 11) + ' ' + a + 'Z', sk) + L('M' + (x - 9) + ' ' + (a + (b - a) * .1) + ' L' + (x + 9) + ' ' + (b - (b - a) * .1), INK, 3) +
         (c.fem ? L('M' + (x + side * 9) + ' ' + (side < 0 ? a : b) + ' l' + (side * 4) + ' -3', INK, 2.6) : '');
@@ -175,6 +176,29 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       var am = 'M102 190 C104 176 136 176 138 190 C130 186 110 186 102 190Z';
       s += P(am, mouthC, 2.6) + clip(am, F('M100 176 H140 V184 H100Z', '#fff') + L('M112 176 V186 M120 176 V186 M128 176 V186', '#d9c9cc', 1.6));
       s += '<g transform="translate(166 92)">' + L('M-9 -3 Q-3 -3 -3 -9 M3 -9 Q3 -3 9 -3 M9 3 Q3 3 3 9 M-3 9 Q-3 3 -9 3', '#e23b3b', 3.8) + '</g>';
+    } else if (ex === 'hello') { // waving with a big open smile
+      s += cheeks(cheek, .55, 11) + freck + dotEye(LX, -1, 0) + dotEye(RX, 1, 0);
+      s += brow('M86 122 C92 115 102 115 108 118') + brow('M132 118 C138 115 148 115 154 122') + nose;
+      var hm = 'M102 172 C112 176 128 176 138 172 C138 186 130 194 120 194 C110 194 102 186 102 172Z';
+      s += P(hm, mouthC, 2.6) + clip(hm, F('M98 168 H142 V178 H98Z', '#fff') + E(120, 194, 11, 7, tongue));
+    } else if (ex === 'drowsy' || ex === 'heavy') { // getting sleepy: lids drooping, a soft little smile
+      s += cheeks(cheek, .45) + freck + dotEye(LX, -1, 0, 1) + dotEye(RX, 1, 0, 1) + lid(LX, -1, ex === 'heavy' ? 'heavy' : 'half') + lid(RX, 1, ex === 'heavy' ? 'heavy' : 'half');
+      s += brow('M86 128 C92 124 102 124 108 126') + brow('M132 126 C138 124 148 124 154 128') + nose;
+      s += ex === 'heavy' ? L('M110 180 C116 183 124 183 130 180', INK, 3.4) : L('M106 178 C114 185 126 185 134 178', INK, 3.4);
+    } else if (ex === 'blink' || ex === 'sleep') { // eyes shut: blinking, or asleep with a little round mouth
+      var low = ex === 'sleep' ? 3 : 0;
+      s += cheeks(cheek, ex === 'sleep' ? .6 : .45) + freck;
+      s += L('M88 ' + (146 + low) + ' C94 ' + (152 + low) + ' 100 ' + (152 + low) + ' 106 ' + (146 + low), INK, 3.6) + L('M134 ' + (146 + low) + ' C140 ' + (152 + low) + ' 146 ' + (152 + low) + ' 152 ' + (146 + low), INK, 3.6);
+      if (c.fem) s += L('M88 ' + (146 + low) + ' l-4 2 M152 ' + (146 + low) + ' l4 2', INK, 2.4);
+      s += brow(ex === 'sleep' ? 'M86 130 C92 127 102 127 108 129' : 'M86 126 C92 120 102 120 108 122') + brow(ex === 'sleep' ? 'M132 129 C138 127 148 127 154 130' : 'M132 122 C138 120 148 120 154 126') + nose;
+      s += ex === 'sleep' ? P('M120 176 C126 176 128 182 128 185 C128 189 124 191 120 191 C116 191 112 189 112 185 C112 182 114 176 120 176Z', mouthC, 2.4)
+        : L('M104 176 C112 186 128 186 136 176', INK, 3.6) + L('M101 174 l4 3 M139 174 l-4 3', INK, 2.4);
+    } else if (ex === 'yawn') { // eyes squeezed, mouth wide open, arms stretched up
+      s += cheeks(cheek, .5) + freck;
+      s += L('M88 142 L104 148 L88 152', INK, 3.6) + L('M152 142 L136 148 L152 152', INK, 3.6);
+      s += brow('M86 122 C92 116 102 116 108 120') + brow('M132 120 C138 116 148 116 154 122') + nose;
+      var ym = 'M120 168 C134 168 138 182 138 190 C138 200 130 206 120 206 C110 206 102 200 102 190 C102 182 106 168 120 168Z';
+      s += P(ym, mouthC, 2.6) + clip(ym, E(120, 206, 13, 9, tongue) + F('M100 164 H140 V172 H100Z', '#fff'));
     } else { // greet / neutral
       s += cheeks(cheek, .45) + freck + dotEye(LX, -1, 0) + dotEye(RX, 1, 0);
       s += brow('M86 126 C92 120 102 120 108 122') + brow('M132 122 C138 120 148 120 154 126') + nose;
@@ -192,9 +216,11 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     wave: { l: [[86, 246], [76, 296], [74, 340]], r: [[154, 246], [190, 236], [198, 188]], open: 'r' },
     cheer: { l: [[86, 246], [54, 222], [38, 178]], r: [[154, 246], [186, 222], [202, 178]], open: 'lr' },
     cross: { r: [[154, 246], [162, 294], [100, 292]], l: [[86, 246], [78, 290], [142, 284]], front: 'l' },
-    hips: { l: [[86, 246], [52, 288], [80, 324]], r: [[154, 246], [188, 288], [160, 324]] }
+    hips: { l: [[86, 246], [52, 288], [80, 324]], r: [[154, 246], [188, 288], [160, 324]] },
+    // yawning: one hand over the mouth (drawn over the face), the other arm bent up behind the head
+    yawn: { l: [[86, 246], [46, 262], [104, 200]], r: [[154, 246], [206, 198], [180, 148]], open: 'l', over: 'l' }
   };
-  function poseFor(ex) { return ex === 'greet' ? POSES.wave : ex === 'happy' ? POSES.cheer : ex === 'serious' ? POSES.cross : ex === 'angry' ? POSES.hips : POSES.rest; }
+  function poseFor(ex) { return ex === 'greet' || ex === 'hello' ? POSES.wave : ex === 'yawn' ? POSES.yawn : ex === 'happy' ? POSES.cheer : ex === 'serious' ? POSES.cross : ex === 'angry' ? POSES.hips : POSES.rest; }
   function seg(p, t) { return [p[0][0] + (p[1][0] - p[0][0]) * t, p[0][1] + (p[1][1] - p[0][1]) * t]; }
   function arm(pts, c, sleeve, longSl, open) {
     var sk = c.skin, s = '';
@@ -314,7 +340,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     if (c.acc.indexOf('apron') >= 0) s += L('M98 236 C104 246 136 246 142 236', '#3e9a5a', 4);
     // arms
     var front = pose.front, lArm = arm(pose.l, c, sleeve, longSl, pose.open && pose.open.indexOf('l') >= 0), rArm = arm(pose.r, c, sleeve === t ? sh(t) : sleeve, longSl, pose.open && pose.open.indexOf('r') >= 0);
-    s += front === 'l' ? rArm + lArm : lArm + rArm;
+    s += pose.over === 'l' ? rArm : front === 'l' ? rArm + lArm : lArm + rArm;
     if (hs.mid) s += hs.mid;
     // ears
     if (hs.ears) s += E(55, 146, 11, 15, sk, null, 2.6) + E(185, 146, 11, 15, sh(sk), null, 2.6) + L('M55 140 C51 146 53 152 57 154', sh(sh(sk)), 2) + L('M185 140 C189 146 187 152 183 154', sh(sh(sk)), 2);
@@ -326,6 +352,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     if (hs.front) s += P(hs.front, c.hair);
     s += hs.side + hs.det;
     s += accHead(c);
+    if (pose.over === 'l') s += lArm;
     // little extras per expression
     if (ex === 'serious') s += P('M180 116 C186 125 189 130 189 135 C189 140 185 143 180 143 C175 143 171 140 171 135 C171 130 174 125 180 116Z', '#8fd0f2', 2) + C(177, 134, 2, '#fff');
     if (ex === 'happy') s += '<g fill="#ffd43b" stroke="#e0a91b" stroke-width="1.6" stroke-linejoin="round">' + [[30, 116, 1], [206, 92, .8], [226, 130, .6]].map(function (p) { return '<path transform="translate(' + p[0] + ' ' + p[1] + ') scale(' + p[2] + ')" d="M0 -12 C2 -4 4 -2 12 0 C4 2 2 4 0 12 C-2 4 -4 2 -12 0 C-4 -2 -2 -4 0 -12Z"/>'; }).join('') + '</g>';
@@ -663,27 +690,123 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       '<rect x="16" y="14" width="1208" height="24" fill="#000" opacity=".12"/>' +
       [152, 304].map(function (y) { return '<rect x="16" y="' + (y + 22) + '" width="1208" height="20" fill="#000" opacity=".07"/><rect x="6" y="' + y + '" width="1228" height="22" rx="6" fill="url(#' + p + ')"/><rect x="6" y="' + (y + 22) + '" width="1228" height="9" fill="#000" opacity=".22"/>'; }).join('');
   })());
+  // title: shop front. BG.title is everything behind the window displays and BG.titleFront goes over them
+  // (window frames, glass shine, awnings, crate fronts), so the goods sit inside the windows.
+  // Shelf boards (product bottoms) at y=424 and y=526 in both windows; crates hold fruit at y~615.
+  var TWIN = [[36, 428], [852, 1244]];
   BG.title = S(W, H, (function () {
-    var sky = U('ty'), br = U('tb'), win = U('tw'), sd = U('ts');
-    var bricks = '';
-    for (var y = 120; y < 600; y += 26) for (var x = ((y / 26) % 2) * 30 - 30; x < W; x += 60) bricks += '<rect x="' + x + '" y="' + y + '" width="56" height="22" rx="3" fill="#c2563f" opacity="' + (0.75 + ((x * 7 + y) % 5) * .05) + '"/>';
-    return '<defs>' + lin(sky, [[0, '#8fd3ef'], [1, '#d8f2fb']], 0, 0, 0, 1) + lin(win, [[0, '#2f8f8b'], [1, '#1f6966']], 0, 0, 0, 1) + lin(sd, [[0, '#000', .35], [1, '#000', 0]], 0, 0, 0, 1) + '</defs>' +
-      '<rect width="' + W + '" height="' + H + '" fill="url(#' + sky + ')"/>' +
-      '<g fill="#fff" opacity=".9"><ellipse cx="180" cy="70" rx="70" ry="24"/><ellipse cx="230" cy="58" rx="50" ry="26"/><ellipse cx="1080" cy="90" rx="80" ry="22"/><ellipse cx="1030" cy="78" rx="44" ry="24"/></g>' +
-      '<rect x="0" y="110" width="' + W + '" height="500" fill="#a9462f"/>' + bricks +
-      '<rect x="0" y="110" width="' + W + '" height="12" fill="#6e2a1b"/>' +
-      // windows with goods
-      '<rect x="60" y="300" width="330" height="250" rx="10" fill="#6e4219"/><rect x="74" y="314" width="302" height="222" fill="url(#' + win + ')"/><path d="M90 330 L180 330 L90 420Z" fill="#fff" opacity=".18"/>' +
-      '<rect x="890" y="300" width="330" height="250" rx="10" fill="#6e4219"/><rect x="904" y="314" width="302" height="222" fill="url(#' + win + ')"/><path d="M920 330 L1010 330 L920 420Z" fill="#fff" opacity=".18"/>' +
-      '<rect x="74" y="470" width="302" height="14" fill="#a8692e"/><rect x="904" y="470" width="302" height="14" fill="#a8692e"/>' +
-      // door
-      '<rect x="520" y="330" width="240" height="280" rx="8" fill="#6e4219"/><rect x="540" y="350" width="200" height="260" fill="#2f8f8b"/><rect x="556" y="366" width="168" height="120" fill="#bfe6f2"/><circle cx="716" cy="520" r="9" fill="#e8c06a"/>' +
-      // awning
-      '<path d="M30 230 H1250 L1280 300 H0Z" fill="#7c4a22"/>' + (function () { var a = ''; for (var i = 0; i < 20; i++) { var x = i * 64; a += '<path d="M' + x + ' 236 H' + (x + 64) + ' L' + (x + 64) + ' 296 Q' + (x + 32) + ' 330 ' + x + ' 296Z" fill="' + (i % 2 ? '#fff7e8' : '#d6453a') + '"/>'; } return a; })() +
-      '<rect x="0" y="296" width="' + W + '" height="40" fill="url(#' + sd + ')" opacity=".6"/>' +
-      // sidewalk
-      '<rect x="0" y="610" width="' + W + '" height="110" fill="#c9c2b6"/><rect x="0" y="610" width="' + W + '" height="10" fill="#9e968a"/>' +
-      [0, 1, 2, 3, 4, 5, 6, 7].map(function (i) { return '<path d="M' + (i * 180) + ' 620 L' + (i * 180 - 40) + ' 720" stroke="#aaa294" stroke-width="3"/>'; }).join('');
+    var sky = U('ty'), inn = U('ti'), glow = U('tg'), metal = U('tm'), fl = U('tf'), lampG = U('tl');
+    var s = '<defs>' + lin(sky, [[0, '#9fd8f0'], [1, '#d6f0fa']], 0, 0, 0, 1) + lin(inn, [[0, '#f7e9cc'], [1, '#e0c393']], 0, 0, 0, 1) +
+      rad(glow, [[0, '#fff3cf', .85], [1, '#fff3cf', 0]], .5, .2, .7) +
+      lin(metal, [[0, '#d5dbe0'], [.45, '#a9b2ba'], [1, '#78828b']], 0, 0, 0, 1) + lin(fl, [[0, '#d9d2c4'], [1, '#c4bcad']], 0, 0, 0, 1) +
+      rad(lampG, [[0, '#ffe7a3', .8], [1, '#ffe7a3', 0]]) + '</defs>';
+    // sky and cornice
+    s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + sky + ')"/>';
+    s += '<g fill="#fff" opacity=".85"><ellipse cx="120" cy="34" rx="64" ry="18"/><ellipse cx="165" cy="26" rx="40" ry="18"/><ellipse cx="1150" cy="40" rx="70" ry="16"/></g>';
+    // upper wall: muted brick with fine mortar
+    s += '<rect x="0" y="70" width="' + W + '" height="160" fill="#8e4232"/>';
+    for (var y = 86; y < 230; y += 18) for (var x = ((y - 86) / 18 % 2) * 26 - 26; x < W; x += 52) s += '<rect x="' + (x + 1.5) + '" y="' + (y + 1.5) + '" width="49" height="15" rx="1.5" fill="' + ['#b55a43', '#ad543e', '#b9614a', '#a9503b'][((x * 13 + y * 7) % 4 + 4) % 4] + '"/>';
+    s += '<rect x="0" y="56" width="' + W + '" height="26" fill="#1f4d45"/><rect x="0" y="56" width="' + W + '" height="5" fill="#2f6d62"/><rect x="0" y="82" width="' + W + '" height="6" fill="#000" opacity=".25"/>';
+    for (var d = 8; d < W; d += 28) s += '<rect x="' + d + '" y="82" width="14" height="10" fill="#1f4d45"/>';
+    // fascia under the brick
+    s += '<rect x="0" y="212" width="' + W + '" height="24" fill="#1f4d45"/><rect x="0" y="216" width="' + W + '" height="3" fill="#d9a441"/><rect x="0" y="230" width="' + W + '" height="3" fill="#d9a441"/>';
+    // shop front: painted wood
+    s += '<rect x="0" y="236" width="' + W + '" height="372" fill="#2b6358"/>';
+    // pilasters at the ends and beside the door
+    [[0, 36], [428, 456], [824, 852], [1244, 1280]].forEach(function (p) {
+      s += '<rect x="' + p[0] + '" y="236" width="' + (p[1] - p[0]) + '" height="372" fill="#24564c"/><rect x="' + p[0] + '" y="236" width="4" height="372" fill="#3b7d70"/>';
+    });
+    // windows: warm lit interior, wood panel back wall, two shelf boards with a front lip and a shadow
+    TWIN.forEach(function (wx) {
+      var a = wx[0] + 18, b = wx[1] - 18, w = b - a;
+      s += '<rect x="' + a + '" y="304" width="' + w + '" height="228" fill="url(#' + inn + ')"/>';
+      for (var px = a + 36; px < b; px += 46) s += '<rect x="' + px + '" y="304" width="2" height="228" fill="#a77d4c" opacity=".25"/>';
+      s += '<rect x="' + a + '" y="304" width="' + w + '" height="228" fill="url(#' + glow + ')"/>';
+      [[424, 1], [526, 0]].forEach(function (sh) {
+        var y0 = sh[0];
+        s += '<rect x="' + a + '" y="' + (y0 + 14) + '" width="' + w + '" height="14" fill="#000" opacity=".12"/>';
+        s += '<rect x="' + a + '" y="' + (y0 - 5) + '" width="' + w + '" height="10" fill="#d9a466"/>';
+        s += '<rect x="' + a + '" y="' + (y0 + 5) + '" width="' + w + '" height="11" fill="#9a6232"/><rect x="' + a + '" y="' + (y0 + 5) + '" width="' + w + '" height="2" fill="#c98a3c"/>';
+        if (sh[1]) [a + 40, b - 40].forEach(function (bx) { s += '<path d="M' + (bx - 6) + ' ' + (y0 + 16) + ' h12 l-12 18z" fill="#5a3412"/>'; });
+      });
+    });
+    // doorway: the shop inside, behind two glass doors
+    s += '<rect x="474" y="272" width="332" height="334" fill="#4a3424"/>';
+    s += '<rect x="474" y="272" width="332" height="334" fill="url(#' + inn + ')" opacity=".55"/>';
+    [360, 430, 500].forEach(function (y) {
+      s += '<rect x="494" y="' + y + '" width="292" height="8" fill="#7a5532" opacity=".7"/>';
+      for (var k = 0; k < 9; k++) s += '<rect x="' + (500 + k * 32) + '" y="' + (y - 26 + (k % 3) * 4) + '" width="22" height="' + (26 - (k % 3) * 4) + '" rx="3" fill="' + ['#c0563f', '#3e8f6a', '#d9a441', '#4a7bb5'][k % 4] + '" opacity=".45"/>';
+    });
+    s += '<rect x="474" y="272" width="332" height="334" fill="url(#' + glow + ')" opacity=".6"/>';
+    // door leaves (frames only; the glass is open space)
+    [[478, 640], [640, 802]].forEach(function (lf) {
+      var x0 = lf[0], x1 = lf[1];
+      s += '<path fill-rule="evenodd" fill="#1f4d45" d="M' + x0 + ' 352 H' + x1 + ' V606 H' + x0 + 'Z M' + (x0 + 14) + ' 366 H' + (x1 - 14) + ' V520 H' + (x0 + 14) + 'Z"/>';
+      s += '<rect x="' + (x0 + 14) + '" y="530" width="' + (x1 - x0 - 28) + '" height="64" rx="4" fill="#24564c" stroke="#173b35" stroke-width="3"/>';
+      s += '<path d="M' + (x0 + 26) + ' 376 L' + (x0 + 66) + ' 376 L' + (x0 + 26) + ' 440Z" fill="#fff" opacity=".18"/>';
+    });
+    s += '<rect x="628" y="420" width="8" height="70" rx="4" fill="#d9a441"/><rect x="644" y="420" width="8" height="70" rx="4" fill="#d9a441"/>';
+    // roller shutter: guide rails, slats rolled half way up, bottom bar with handle and lock, housing on top
+    s += '<rect x="456" y="272" width="18" height="336" fill="#7e8891"/><rect x="806" y="272" width="18" height="336" fill="#7e8891"/>' +
+      '<rect x="468" y="272" width="6" height="336" fill="#4f575f"/><rect x="806" y="272" width="6" height="336" fill="#4f575f"/>';
+    for (var sy = 272; sy < 344; sy += 18) s += '<rect x="474" y="' + sy + '" width="332" height="18" fill="#adb5bd"/><rect x="474" y="' + sy + '" width="332" height="4" fill="#e3e8ec"/><rect x="474" y="' + (sy + 14) + '" width="332" height="4" fill="#7b848d"/>';
+    s += '<rect x="474" y="344" width="332" height="16" fill="#5a636b"/><rect x="474" y="344" width="332" height="4" fill="#8a939b"/>' +
+      '<rect x="600" y="349" width="80" height="9" rx="4.5" fill="#2f353b"/><rect x="633" y="346" width="14" height="10" rx="2" fill="#c9a23a"/>';
+    s += '<rect x="474" y="360" width="332" height="10" fill="#000" opacity=".2"/>';
+    s += '<rect x="448" y="236" width="384" height="40" rx="6" fill="url(#' + metal + ')" stroke="#5f6870" stroke-width="3"/>' +
+      '<rect x="456" y="242" width="368" height="4" rx="2" fill="#fff" opacity=".45"/>' +
+      [462, 818].map(function (bx) { return '<circle cx="' + bx + '" cy="256" r="4" fill="#5f6870"/>'; }).join('');
+    // stone step at the door
+    s += '<rect x="452" y="600" width="376" height="14" rx="3" fill="#b9b2a6"/><rect x="452" y="600" width="376" height="3" fill="#ddd7cc"/>';
+    // stall risers under the windows with sunken panels
+    TWIN.forEach(function (wx) {
+      for (var px = wx[0] + 14; px < wx[1] - 20; px += 95) s += '<rect x="' + px + '" y="562" width="86" height="38" rx="3" fill="#24564c" stroke="#1a453d" stroke-width="3"/><rect x="' + (px + 3) + '" y="564" width="80" height="3" fill="#3b7d70"/>';
+    });
+    // wall lanterns beside the door
+    [442, 838].forEach(function (lx) {
+      s += '<circle cx="' + lx + '" cy="322" r="60" fill="url(#' + lampG + ')"/>' +
+        '<rect x="' + (lx - 3) + '" y="282" width="6" height="18" fill="#1a1a1f"/><path d="M' + (lx - 14) + ' 300 H' + (lx + 14) + ' L' + (lx + 10) + ' 340 H' + (lx - 10) + 'Z" fill="#ffe7a3" stroke="#1a1a1f" stroke-width="4" stroke-linejoin="round"/>' +
+        '<path d="M' + (lx - 18) + ' 300 H' + (lx + 18) + ' L' + lx + ' 290Z" fill="#1a1a1f"/><rect x="' + (lx - 12) + '" y="340" width="24" height="5" rx="2" fill="#1a1a1f"/>';
+    });
+    // pavement: slabs, then the kerb and a strip of road (plain colour so tall screens can stretch it)
+    s += '<rect x="0" y="608" width="' + W + '" height="112" fill="url(#' + fl + ')"/><rect x="0" y="608" width="' + W + '" height="10" fill="#000" opacity=".16"/>';
+    [646, 690].forEach(function (y) { s += '<rect x="0" y="' + y + '" width="' + W + '" height="2" fill="#a59d8f"/>'; });
+    for (var i = -2; i < 12; i++) { var x0 = i * 128 + 64; s += '<path d="M' + x0 + ' 610 L' + (x0 + (x0 - 640) * .18) + ' 704" stroke="#a59d8f" stroke-width="2"/>'; }
+    s += '<rect x="0" y="704" width="' + W + '" height="8" fill="#9a9284"/><rect x="0" y="712" width="' + W + '" height="8" fill="#5d5a55"/>';
+    // crates (back walls and dark insides; their fronts are in BG.titleFront)
+    [[70, 230], [250, 410]].forEach(function (cr) {
+      s += '<rect x="' + cr[0] + '" y="586" width="' + (cr[1] - cr[0]) + '" height="40" rx="3" fill="#a8692e" stroke="#6e4219" stroke-width="3"/><rect x="' + (cr[0] + 6) + '" y="598" width="' + (cr[1] - cr[0] - 12) + '" height="26" fill="#5a3412"/>';
+    });
+    return s;
+  })());
+  BG.titleFront = S(W, H, (function () {
+    var s = '';
+    TWIN.forEach(function (wx) {
+      var a = wx[0] + 18, b = wx[1] - 18;
+      // glass shine: two slanted strips and a soft corner glare
+      s += '<path d="M' + (a + 30) + ' 304 H' + (a + 90) + ' L' + (a + 10) + ' 420 H' + a + ' V350Z" fill="#fff" opacity=".16"/>' +
+        '<path d="M' + (a + 112) + ' 304 H' + (a + 132) + ' L' + (a + 52) + ' 420 H' + (a + 32) + 'Z" fill="#fff" opacity=".12"/>' +
+        '<path d="M' + (b - 140) + ' 532 L' + b + ' 400 V532Z" fill="#fff" opacity=".06"/>';
+      // frame with a gold moulding, sill below
+      s += '<path fill-rule="evenodd" fill="#1f4d45" d="M' + wx[0] + ' 296 H' + wx[1] + ' V546 H' + wx[0] + 'Z M' + a + ' 304 H' + b + ' V532 H' + a + 'Z"/>' +
+        '<rect x="' + (a - 4) + '" y="300" width="' + (b - a + 8) + '" height="236" fill="none" stroke="#d9a441" stroke-width="2.5"/>';
+      s += '<rect x="' + (wx[0] - 8) + '" y="540" width="' + (wx[1] - wx[0] + 16) + '" height="14" rx="3" fill="#d6cfc2"/><rect x="' + (wx[0] - 8) + '" y="540" width="' + (wx[1] - wx[0] + 16) + '" height="4" fill="#f2ede4"/><rect x="' + wx[0] + '" y="554" width="' + (wx[1] - wx[0]) + '" height="6" fill="#000" opacity=".2"/>';
+      // striped awning with a scalloped valance
+      var x0 = wx[0] - 14, x1 = wx[1] + 14, n = 8, sw = (x1 - x0) / n, tw = (x1 - x0 - 28) / n;
+      s += '<path d="M' + (x0 + 14) + ' 236 H' + (x1 - 14) + ' L' + x1 + ' 286 H' + x0 + 'Z" fill="#c43c32"/>';
+      for (var i = 0; i < n; i += 2) s += '<path d="M' + (x0 + 14 + i * tw) + ' 236 H' + (x0 + 14 + (i + 1) * tw) + ' L' + (x0 + (i + 1) * sw) + ' 286 H' + (x0 + i * sw) + 'Z" fill="#fbf3e4"/>';
+      for (var k = 0; k < n; k++) s += '<path d="M' + (x0 + k * sw) + ' 284 H' + (x0 + (k + 1) * sw) + ' V296 Q' + (x0 + (k + .5) * sw) + ' 314 ' + (x0 + k * sw) + ' 296Z" fill="' + (k % 2 ? '#c43c32' : '#fbf3e4') + '"/>';
+      s += '<rect x="' + x0 + '" y="282" width="' + (x1 - x0) + '" height="4" fill="#000" opacity=".18"/><rect x="' + (x0 + 14) + '" y="234" width="' + (x1 - x0 - 28) + '" height="6" rx="3" fill="#7e8891"/>';
+    });
+    // crate fronts: three planks, corner posts, a shadow on the pavement
+    [[70, 230], [250, 410]].forEach(function (cr) {
+      var w = cr[1] - cr[0];
+      s += '<ellipse cx="' + (cr[0] + w / 2) + '" cy="686" rx="' + (w / 2 + 14) + '" ry="10" fill="#000" opacity=".22"/>';
+      [618, 638, 658].forEach(function (y, j) { s += '<rect x="' + cr[0] + '" y="' + y + '" width="' + w + '" height="18" rx="2" fill="' + (j % 2 ? '#c98a3c' : '#b8743c') + '" stroke="#6e4219" stroke-width="2.5"/>'; });
+      s += '<rect x="' + (cr[0] - 4) + '" y="612" width="14" height="72" rx="2" fill="#9a6232" stroke="#6e4219" stroke-width="2.5"/><rect x="' + (cr[1] - 10) + '" y="612" width="14" height="72" rx="2" fill="#9a6232" stroke="#6e4219" stroke-width="2.5"/>';
+      s += '<rect x="' + (cr[0] + w / 2 - 26) + '" y="640" width="52" height="16" rx="3" fill="#fbf3e4" stroke="#6e4219" stroke-width="2"/>';
+    });
+    return s;
   })());
   // metal roller shutter, W x 1200 (tall enough to cover tablet screens); bottom bar with a handle
   BG.shutter = S(W, 1200, (function () {
@@ -888,16 +1011,103 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + .02);
     } catch (e) { }
   }
+  /* ---- small synth kit: every sound is generated, there are no audio files ---- */
+  var noiseBuf = null;
+  function noise() {
+    if (!noiseBuf) { noiseBuf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate); var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    return noiseBuf;
+  }
+  function live() {
+    if (!actx || save.muted) return false;
+    try { if (actx.state === 'suspended') actx.resume(); } catch (e) { }
+    return true;
+  }
+  function envGain(t, peak, attack, decay) {
+    var g = actx.createGain();
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(.0001, t + attack + decay);
+    return g;
+  }
+  // a burst of filtered noise (clicks, thumps, rustles); toF sweeps the filter
+  function burst(t, dur, type, freq, q, peak, out, toF) {
+    var s = actx.createBufferSource(), f = actx.createBiquadFilter(), g = envGain(t, peak, .002, dur);
+    s.buffer = noise(); f.type = type; f.frequency.setValueAtTime(freq, t); if (toF) f.frequency.exponentialRampToValueAtTime(toF, t + dur); if (q) f.Q.value = q;
+    s.connect(f); f.connect(g); g.connect(out || actx.destination); s.start(t, Math.random() * 1.5, dur + .05);
+  }
+  // a struck object: decaying partials [ratio, gain, decay factor] like a bell or a metal sheet
+  function ring(t, base, parts, peak, decay, out, type) {
+    parts.forEach(function (p) {
+      var o = actx.createOscillator(), d = decay * (p[2] || 1), g = envGain(t, peak * p[1], .002, d);
+      o.type = type || 'sine'; o.frequency.value = base * p[0];
+      o.connect(g); g.connect(out || actx.destination); o.start(t); o.stop(t + d + .05);
+    });
+  }
+  function at(delay) { return actx.currentTime + (delay || 0); }
+  var METAL = [[1, 1, 1], [1.013, .7, 1], [2.32, .7, .8], [3.73, .55, .6], [5.41, .4, .45], [7.9, .25, .35]];
+  var TIN = [[1, 1, 1], [2.32, .6, .7], [3.73, .45, .5], [5.41, .3, .35]];
+  var BELL = [[1, 1, 1], [2, .5, .7], [2.76, .45, .55], [5.4, .25, .3], [.5, .3, 1.3]];
+  // what a product sounds like when it lands
+  function matOf(p) {
+    if (!p) return 'soft';
+    if (p.id === 'egg') return 'egg';
+    if (p.id === 'oil' || p.id === 'juice') return 'glass';
+    if (p.id === 'chips') return 'crinkle';
+    if (p.id === 'rice') return 'sack';
+    return { can: 'metal', bottle: 'plastic', cup: 'plastic', box: 'card', carton: 'card', slice: 'soft', bag: 'sack' }[p.cont] || 'fruit';
+  }
   var SFX = {
-    pick: function () { tone(660, .08, 'sine', .15, 990); },
-    thud: function (v) { tone(140 + Math.random() * 40, .12, 'triangle', Math.min(.35, .08 + v * .03), 70); },
-    slide: function () { tone(320, .2, 'triangle', .14, 150); },
+    pick: function () { tone(560 + Math.random() * 180, .08, 'sine', .15, 980 + Math.random() * 200); },
+    thud: function (v, p) {
+      if (!live()) return;
+      try {
+        var t = at(), vol = Math.min(.4, .08 + v * .03), r = .9 + Math.random() * .2;
+        switch (matOf(p)) {
+          case 'metal': burst(t, .012, 'bandpass', 3200, 2, vol * .7); ring(t, 820 * r, TIN, vol * .45, .2, null, 'triangle'); break;
+          case 'glass': burst(t, .02, 'lowpass', 900, 0, vol * .6); ring(t, 1450 * r, [[1, 1, 1], [2.7, .4, .5], [4.6, .3, .3]], vol * .35, .3); break;
+          case 'plastic': tone(280 * r, .09, 'sine', vol, 170); burst(t, .03, 'bandpass', 950, 2, vol * .5); break;
+          case 'crinkle': for (var i = 0; i < 6; i++) burst(t + Math.random() * .12, .02, 'highpass', 3200 + Math.random() * 2000, 0, vol * .5); break;
+          case 'sack': burst(t, .1, 'lowpass', 450, 0, vol * 2); burst(t + .01, .07, 'bandpass', 1900, 1, vol * .8); break;
+          case 'card': burst(t, .07, 'lowpass', 380, 0, vol * .9); tone(125 * r, .08, 'sine', vol * .7, 80); burst(t, .02, 'bandpass', 1300, 2, vol * .3); break;
+          case 'egg': tone(950 * r, .04, 'sine', vol * .5, 720); burst(t, .015, 'highpass', 2200, 0, vol * .3); break;
+          case 'soft': burst(t, .06, 'lowpass', 300, 0, vol * .8); tone(95 * r, .09, 'sine', vol * .7, 60); break;
+          default: tone(120 * r + Math.random() * 30, .12, 'sine', vol * 1.1, 60); burst(t, .05, 'lowpass', 320, 0, vol * .7);
+        }
+      } catch (e) { }
+    },
+    // shelf sliding: a whoosh
+    slide: function () { if (!live()) return; try { burst(at(), .26, 'bandpass', 500, 1.2, .5, null, 2400); tone(300, .2, 'triangle', .06, 160); } catch (e) { } },
     good: function () { tone(523, .14, 'triangle', .22); tone(659, .14, 'triangle', .22, 0, .12); tone(784, .3, 'triangle', .22, 0, .24); },
     meh: function () { tone(440, .18, 'triangle', .18); tone(392, .26, 'triangle', .18, 0, .16); },
     bad: function () { tone(220, .32, 'square', .08, 150); },
     nope: function () { tone(180, .14, 'square', .07, 140); },
-    poof: function () { tone(900, .12, 'sine', .08, 300); },
-    click: function () { tone(500, .05, 'square', .05); }
+    poof: function () { if (!live()) return; try { burst(at(), .25, 'bandpass', 2400, 1, .25, null, 500); } catch (e) { } },
+    click: function () { tone(470 + Math.random() * 70, .05, 'square', .05); },
+    // shop door bell: "ding-dong" plus the little bells hanging on the door
+    bell: function () {
+      if (!live()) return;
+      try {
+        var t = at();
+        ring(t, 1568, BELL, .16, 1.1); ring(t + .17, 1245, BELL, .14, 1.4);
+        for (var i = 0; i < 5; i++) ring(t + .02 + i * .035 + Math.random() * .02, 2800 + Math.random() * 1200, [[1, 1, 1], [2.3, .4, .5]], .035, .25);
+      } catch (e) { }
+    },
+    step: function (heavy) { if (!live()) return; try { var t = at(); burst(t, .07, 'lowpass', heavy ? 170 : 250, 0, heavy ? 1.5 : 1.1); burst(t + .01, .02, 'bandpass', 1600, 2, .14); } catch (e) { } },
+    // cash register: two mechanical clicks, the drawer bell, then coins
+    till: function (coins) {
+      if (!live()) return;
+      try {
+        var t = at();
+        burst(t, .02, 'bandpass', 2600, 3, .35); burst(t + .06, .03, 'bandpass', 1500, 3, .3); burst(t + .09, .08, 'lowpass', 500, 0, .25);
+        ring(t + .12, 2093, BELL, .13, .9); ring(t + .12, 2637, BELL, .07, .7);
+        for (var i = 0; i < coins; i++) ring(t + .3 + i * .055 + Math.random() * .03, 3200 + Math.random() * 1800, [[1, 1, 1], [2.1, .5, .6]], .06, .14);
+      } catch (e) { }
+    },
+    // rising chime, one note more for each step of the streak
+    streak: function (n) { var sc = [659, 784, 880, 1047, 1175, 1319, 1568]; for (var i = 0; i < Math.min(n + 1, sc.length); i++) tone(sc[i], .12, 'triangle', .14, 0, i * .07); },
+    // a long sleepy yawn (rising, then sliding down) and a soft snore
+    yawn: function () { tone(330, .3, 'triangle', .09, 470); tone(470, 1, 'triangle', .09, 190, .3); babble('woman', .8, .05); },
+    snore: function () { if (!live()) return; try { var t = at(); burst(t, .9, 'lowpass', 260, 0, .35, null, 140); burst(t + 1.1, .7, 'bandpass', 900, 2, .06, null, 500); } catch (e) { } },
+    // key turning in the shutter lock
+    unlock: function () { if (!live()) return; try { var t = at(); burst(t, .012, 'bandpass', 4200, 4, .4); burst(t + .09, .016, 'bandpass', 3000, 4, .5); ring(t + .09, 2200, [[1, 1, 1], [1.5, .4, .6]], .06, .06); } catch (e) { } }
   };
   // "bla bla" babble, one syllable per call: a buzzy saw wave through two vowel formants.
   // f = voice pitch, f1/f2 = formants, len = syllable length, vib = shaky old voice
@@ -908,12 +1118,12 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     man: { f: 120, f1: 520, f2: 1150, len: .1 },
     old: { f: 230, f1: 560, f2: 1300, len: .11, vib: 7 }
   };
-  function babble(kind) {
+  function babble(kind, mul, delay) {
     if (!actx || save.muted) return;
     try {
       if (actx.state === 'suspended') actx.resume();
-      var v = VOX[kind] || VOX.woman, t = actx.currentTime, d = v.len * (.8 + Math.random() * .5);
-      var f0 = v.f * (.85 + Math.random() * .3), vow = .75 + Math.random() * .5;
+      var v = VOX[kind] || VOX.woman, t = actx.currentTime + (delay || 0), d = v.len * (.8 + Math.random() * .5);
+      var f0 = v.f * (mul || 1) * (.85 + Math.random() * .3), vow = .75 + Math.random() * .5;
       var o = actx.createOscillator(), out = actx.createGain();
       o.type = 'sawtooth';
       o.frequency.setValueAtTime(f0 * 1.12, t); o.frequency.exponentialRampToValueAtTime(f0 * .9, t + d);
@@ -930,41 +1140,35 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       out.connect(actx.destination); o.start(t); o.stop(t + d + .03);
     } catch (e) { }
   }
-  // metal roller shutter: a low rumble, one clack per slat going over the roller, and a clang at the end
-  var noiseBuf = null;
-  function noise() {
-    if (!noiseBuf) { noiseBuf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate); var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
-    return noiseBuf;
-  }
+  // metal roller shutter: the drum rumbles and wobbles as it turns, every slat clacks and rings
+  // over the roller (faster as it falls), and at the end the bar bangs on the floor (or clunks into the box)
   function shutterSound(dur, closing) {
-    if (!actx || save.muted) return;
+    if (!live()) return;
     try {
-      if (actx.state === 'suspended') actx.resume();
-      var t0 = actx.currentTime + .02, end = t0 + dur, dest = actx.destination;
-      var rum = actx.createBufferSource(), lp = actx.createBiquadFilter(), rg = actx.createGain();
-      rum.buffer = noise(); rum.loop = true; lp.type = 'lowpass'; lp.frequency.value = 240;
-      rg.gain.setValueAtTime(.0001, t0); rg.gain.exponentialRampToValueAtTime(.5, t0 + .08); rg.gain.setValueAtTime(.5, end - .08); rg.gain.exponentialRampToValueAtTime(.0001, end);
-      rum.connect(lp); lp.connect(rg); rg.connect(dest); rum.start(t0); rum.stop(end + .05);
-      var bp = actx.createBiquadFilter(), cg = actx.createGain();
-      bp.type = 'bandpass'; bp.frequency.value = 2300; bp.Q.value = 1.4; cg.gain.value = 1.1;
-      bp.connect(cg); cg.connect(dest);
-      for (var t = t0; t < end; t += .03 + Math.random() * .018) {
-        var s = actx.createBufferSource(), e = actx.createGain();
-        s.buffer = noise(); e.gain.setValueAtTime(.12 + Math.random() * .25, t); e.gain.exponentialRampToValueAtTime(.001, t + .028);
-        s.connect(e); e.connect(bp); s.start(t, Math.random() * 1.5, .035);
+      var t0 = at(.02), end = t0 + dur, bus = actx.createGain(), comp = actx.createDynamicsCompressor();
+      bus.gain.value = .9; bus.connect(comp); comp.connect(actx.destination);
+      var rum = actx.createBufferSource(), lp = actx.createBiquadFilter(), rg = actx.createGain(), lfo = actx.createOscillator(), lg = actx.createGain();
+      rum.buffer = noise(); rum.loop = true; lp.type = 'lowpass'; lp.frequency.value = 170;
+      rg.gain.setValueAtTime(.0001, t0); rg.gain.exponentialRampToValueAtTime(.55, t0 + .1); rg.gain.setValueAtTime(.55, end - .06); rg.gain.exponentialRampToValueAtTime(.0001, end);
+      lfo.frequency.value = 5.5; lg.gain.value = .25; lfo.connect(lg); lg.connect(rg.gain);
+      rum.connect(lp); lp.connect(rg); rg.connect(bus); rum.start(t0); rum.stop(end + .05); lfo.start(t0); lfo.stop(end + .05);
+      for (var t = t0; t < end;) {
+        var k = (t - t0) / dur, a = .5 + Math.random() * .5;
+        burst(t, .01, 'bandpass', 2400 + Math.random() * 1600, 1.5, .3 * a, bus);
+        ring(t, 360 + Math.random() * 140, TIN, .07 * a, .06 + Math.random() * .05, bus, 'triangle');
+        // the hinge between two slats rattles a second time
+        if (Math.random() < .45) burst(t + .014, .008, 'highpass', 4800, 0, .14 * a, bus);
+        t += (closing ? .065 - .035 * k : .035 + .03 * k) * (.8 + Math.random() * .4);
       }
-      // the final hit: inharmonic partials ring like a metal sheet; a softer clunk when it locks open
-      var hit = closing ? 1 : .45;
-      [[150, .9], [347, .6], [612, .45], [1013, .3], [1561, .2]].forEach(function (p) {
-        var o = actx.createOscillator(), g = actx.createGain();
-        o.type = 'triangle'; o.frequency.value = p[0] * (closing ? 1 : 1.3);
-        g.gain.setValueAtTime(.0001, end); g.gain.exponentialRampToValueAtTime(p[1] * .28 * hit, end + .006); g.gain.exponentialRampToValueAtTime(.0001, end + (closing ? .9 : .35) * (1.2 - p[1] * .4));
-        o.connect(g); g.connect(dest); o.start(end); o.stop(end + 1.1);
-      });
-      var th = actx.createBufferSource(), tl = actx.createBiquadFilter(), tg = actx.createGain();
-      th.buffer = noise(); tl.type = 'lowpass'; tl.frequency.value = 500;
-      tg.gain.setValueAtTime(.7 * hit, end); tg.gain.exponentialRampToValueAtTime(.001, end + .18);
-      th.connect(tl); tl.connect(tg); tg.connect(dest); th.start(end, .2, .2);
+      if (closing) {
+        burst(end, .28, 'lowpass', 420, 0, 1, bus);
+        ring(end, 92, METAL, .4, 1.4, bus);
+        ring(end, 305, METAL, .2, .8, bus, 'triangle');
+        [.11, .2, .26].forEach(function (d, j) { burst(end + d, .02, 'bandpass', 2200, 1.5, .28 / (j + 1), bus); ring(end + d, 420, TIN, .07 / (j + 1), .12, bus, 'triangle'); });
+      } else {
+        burst(end, .12, 'lowpass', 600, 0, .55, bus);
+        ring(end, 165, METAL, .16, .5, bus);
+      }
     } catch (e) { }
   }
   window.addEventListener('pointerdown', audioOn, { passive: true });
@@ -1190,8 +1394,9 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     if (RM) { if (mode === 'open') { c.destroy(); if (done) done(); } else scene.time.delayedCall(600, end); return c; }
     if (mode === 'open') {
       c.y = 0;
+      scene.time.delayedCall(450, function () { SFX.unlock(); });
       scene.time.delayedCall(900, function () {
-        shutterSound(1.15, false);
+        shutterSound(1.27, false);
         // a little tug down first, like someone lifting it by the handle
         scene.tweens.add({ targets: c, y: 14, duration: 120, ease: 'Sine.easeOut', yoyo: true, onComplete: function () {
           scene.tweens.add({ targets: c, y: up, duration: 1150, ease: 'Sine.easeIn', onComplete: end });
@@ -1266,6 +1471,9 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
         ['wait', 'greet', 'happy', 'serious', 'angry'].forEach(function (ex) { add('ch_' + c.id + '_' + ex, A.character(c, ex), 300, 638); });
         add('mo_' + c.id + '_1', A.mouth(c, 1), 65, 65); add('mo_' + c.id + '_2', A.mouth(c, 2), 65, 65);
       });
+      // the shopkeeper's extra moods for the title screen
+      ['hello', 'blink', 'drowsy', 'heavy', 'yawn', 'sleep'].forEach(function (ex) { add('ch_keeper_' + ex, A.character(A.keeper, ex), 300, 638); });
+      add('bg_titleFront', A.bg.titleFront, W, H);
       add('bg_counter', A.bg.counter, W, H); add('bg_counterFront', A.bg.counterFront, W, 260); add('bg_aisle', A.bg.aisle, W, H);
       add('bg_shelf', A.bg.shelf, 1240, 340); add('bg_title', A.bg.title, W, H); add('bg_plain', A.bg.plain, W, H); add('shutter', A.bg.shutter, W, SHUT_H);
       add('basketBack', A.basket.back, A.basket.w, A.basket.h); add('basketFront', A.basket.front, A.basket.w, A.basket.h); add('basketMini', A.basket.mini, 320, 240);
@@ -1288,9 +1496,44 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     }
   });
 
+  // a product standing on a shelf: scaled and anchored by its visible pixels (not the texture box),
+  // so its bottom really touches the board, with a small contact shadow under it
+  var boxes = {};
+  function opaqueBox(scene, key) {
+    if (boxes[key]) return boxes[key];
+    var src = scene.textures.get(key).getSourceImage(), w = src.width, h = src.height, b = { x0: w, y0: h, x1: 0, y1: 0, w: w, h: h };
+    try {
+      var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      var cx = cv.getContext('2d'); cx.drawImage(src, 0, 0);
+      var d = cx.getImageData(0, 0, w, h).data;
+      for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 40) {
+        if (x < b.x0) b.x0 = x; if (x > b.x1) b.x1 = x; if (y < b.y0) b.y0 = y; if (y > b.y1) b.y1 = y;
+      }
+    } catch (e) { }
+    if (b.x1 <= b.x0) b = { x0: 0, y0: 0, x1: w, y1: h, w: w, h: h };
+    return (boxes[key] = b);
+  }
+  function stand(scene, key, x, y, hgt, maxW) {
+    var b = opaqueBox(scene, key), bw = b.x1 - b.x0 + 1, bh = b.y1 - b.y0 + 1;
+    var sc = Math.min(hgt / bh, (maxW || 64) / bw);
+    scene.add.ellipse(x, y, bw * sc * .95, 9, 0x000000, .22);
+    return scene.add.image(x, y, key).setScale(sc).setOrigin((b.x0 + bw / 2) / b.w, (b.y1 + 1) / b.h);
+  }
+  var GOODS_H = { oil: 96, water: 96, soda: 92, milk: 88, juice: 84, cereal: 92, chips: 84, rice: 78, yogurt: 58, cheese: 56, egg: 60, tuna: 44, tomato: 52, potato: 50, onion: 56, carrot: 70 };
+
   /* =========================================================
      TITLE
      ========================================================= */
+  // the shopkeeper in the doorway chats now and then, smiles and waves when tapped,
+  // and falls asleep (Zzz) when nobody touches the screen for a while
+  var KX = 640, KY = 776, KS = .86, TIRE_MS = 20000;
+  var CHAT = ['Listen. Find the food. Fill the basket!', 'Press Play to start!', 'Do you like apples? I do!', 'Can you help me in my shop today?',
+    'We have fresh fruit and vegetables.', 'Try Quiz mode too!', 'What do you want to buy today?', 'Bananas are yellow. Apples are red!',
+    'I love my little shop!', 'Milk, eggs, cheese... we have everything!', 'It\'s a beautiful day!', 'Ready? Let\'s go shopping!'];
+  var HELLO = ['Hello! Nice to see you!', 'Hi! How are you?', 'Hello, friend!', 'Hi there! Welcome!', 'Oh, hello again!'];
+  var WAKE = ['Oh! Hello! I\'m awake!', 'Huh? Oh... hi! Sorry!', 'Mmm... oh! A customer!'];
+  function pick(list, not) { var x; do { x = list[Math.floor(Math.random() * list.length)]; } while (list.length > 1 && x === not); return x; }
+
   var Title = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function Title() { Phaser.Scene.call(this, { key: 'Title' }); },
@@ -1298,33 +1541,181 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       var s = this;
       this.cameras.main.fadeIn(D(250));
       bgImg(this, 'bg_title');
-      // window displays
-      [['apple', 120], ['orange', 190], ['banana', 260], ['lemon', 330]].forEach(function (f, i) { s.add.image(f[1], 448, 'f_' + f[0]).setDisplaySize(70, 70).setAngle(i % 2 ? 6 : -6); });
-      [['milk', 950], ['juice', 1020], ['cereal', 1090], ['water', 1160]].forEach(function (f) { s.add.image(f[1], 440, 'f_' + f[0]).setDisplaySize(76, 76); });
-      // sign board
-      var g = this.add.graphics();
-      g.fillStyle(0x000000, .3); g.fillRoundedRect(W / 2 - 390 + 8, 22 + 12, 780, 176, 26);
-      g.fillStyle(0x7c4a22, 1); g.fillRoundedRect(W / 2 - 390, 22, 780, 176, 26);
-      g.fillStyle(0xb8743c, 1); g.fillRoundedRect(W / 2 - 374, 36, 748, 148, 18);
-      for (var i = 0; i < 5; i++) { g.fillStyle(0x000000, .08); g.fillRect(W / 2 - 374, 36 + i * 30, 748, 3); }
-      g.fillStyle(0xfff7e8, 1); [[W / 2 - 360, 50], [W / 2 + 360, 50], [W / 2 - 360, 170], [W / 2 + 360, 170]].forEach(function (p) { g.fillCircle(p[0], p[1], 6); });
-      var t = txt(this, W / 2, 106, 'Corner Shop', 118, { title: true, color: CREAM, origin: [.5, .5], stroke: '#5a3412', strokeW: 16 });
-      t.setShadow(0, 8, 'rgba(0,0,0,.35)', 0, true, true);
-      if (!RM) this.tweens.add({ targets: t, scale: 1.04, yoyo: true, repeat: -1, duration: 900, ease: 'Sine.easeInOut' });
-      // shopkeeper at the door
-      this.add.image(640, 676, 'ui_shadow').setDisplaySize(260, 50);
-      var k = this.add.image(640, 680, 'ch_keeper_wait').setOrigin(.5, 1).setScale(.62);
-      if (!RM) {
-        this.tweens.add({ targets: k, y: 672, yoyo: true, repeat: -1, duration: 700, ease: 'Sine.easeInOut' });
-        this.time.addEvent({ delay: 2600, loop: true, callback: function () { k.setTexture('ch_keeper_greet'); s.time.delayedCall(1300, function () { k.setTexture('ch_keeper_wait'); }); } });
-      }
+      // window displays: goods standing on the two shelf boards of each window
+      [[54, 424, ['milk', 'juice', 'cereal', 'water', 'oil']], [54, 526, ['rice', 'soup', 'beans', 'corn', 'peas']],
+       [870, 424, ['chips', 'soda', 'yogurt', 'cheese', 'egg']], [870, 526, ['tuna', 'tomato', 'potato', 'onion', 'carrot']]].forEach(function (row) {
+        row[2].forEach(function (k, i) { stand(s, 'f_' + k, row[0] + 46 + i * 66, row[1], GOODS_H[k] || 70); });
+      });
+      // fruit piled in the crates on the pavement (the crate fronts are drawn over them)
+      [['apple', 150], ['orange', 330]].forEach(function (f) {
+        [[-25, 598], [25, 598], [-50, 614], [0, 610], [50, 614]].forEach(function (p, j) { s.add.image(f[1] + p[0], p[1], 'f_' + f[0]).setDisplaySize(58, 58).setAngle((j * 37) % 30 - 15); });
+      });
+      this.add.image(0, 0, 'bg_titleFront').setOrigin(0);
+      // shop sign: dark green board with a gold border
+      var g = this.add.graphics(), sx = W / 2 - 390;
+      g.fillStyle(0x000000, .3); g.fillRoundedRect(sx + 8, 34, 780, 172, 18);
+      g.fillStyle(0x173b35, 1); g.fillRoundedRect(sx, 22, 780, 172, 18);
+      g.lineStyle(4, 0xd9a441, 1); g.strokeRoundedRect(sx + 12, 34, 756, 148, 12);
+      g.lineStyle(1.5, 0xd9a441, .7); g.strokeRoundedRect(sx + 20, 42, 740, 132, 8);
+      g.fillStyle(0xd9a441, 1); [[sx + 30, 52], [sx + 750, 52], [sx + 30, 164], [sx + 750, 164]].forEach(function (p) { g.fillCircle(p[0], p[1], 5); });
+      var t = txt(this, W / 2, 98, 'Corner Shop', 108, { title: true, color: CREAM, origin: [.5, .5], stroke: '#0f2a25', strokeW: 12 });
+      t.setShadow(0, 6, 'rgba(0,0,0,.4)', 0, true, true);
+      txt(this, W / 2, 160, 'FRESH FOOD  ·  EVERY DAY', 24, { title: true, color: '#e8c06a', origin: [.5, .5] });
+      // the shopkeeper, close to us, standing in the doorway
+      this.add.image(KX, KY - 6, 'ui_shadow').setDisplaySize(320, 56);
+      var k = this.keeper = this.add.image(KX, KY, 'ch_keeper_wait').setOrigin(.5, 1).setScale(KS);
+      this.mouth = makeMouth(this, k, A.keeper);
+      this.breath = RM ? null : this.tweens.add({ targets: k, scaleY: KS * 1.014, yoyo: true, repeat: -1, duration: 1400, ease: 'Sine.easeInOut' });
+      this.mode = 'awake'; this.base = 'wait'; this.chain = []; this.last = this.time.now; this.bubble = null; this.said = null; this.taps = [];
+      var hit = this.add.zone(KX, KY - 290, 250, 520).setInteractive({ cursor: 'pointer' });
+      hit.on('pointerdown', function () { s.poke(); });
+      // any touch or key keeps her awake
+      this.input.on('pointerdown', function () { s.last = s.time.now; });
+      this.input.keyboard.on('keydown', function () { s.last = s.time.now; });
+      this.time.delayedCall(D(1600), function () { if (s.mode === 'awake') s.say('Welcome to my corner shop!'); });
+      this.time.addEvent({ delay: 9000, loop: true, callback: function () { if (s.mode === 'awake' && !s.bubble) { s.said = pick(CHAT, s.said); s.say(s.said); } } });
+      this.blink();
       // play
-      var play = button(this, 1010, 606, 'Play', function () { go(s, 'Days'); }, { w: 300, h: 88, fill: C.red, color: CREAM, size: 48 });
-      var quiz = button(this, 1010, 682, 'Quiz mode', function () { go(s, 'QuizMenu'); }, { w: 260, h: 58, fill: C.mustard, size: 30 });
+      var play = button(this, 1060, 612, 'Play', function () { go(s, 'Days'); }, { w: 300, h: 88, fill: C.red, color: CREAM, size: 48 });
+      var quiz = button(this, 1060, 688, 'Quiz mode', function () { go(s, 'QuizMenu'); }, { w: 260, h: 56, fill: C.mustard, size: 30 });
       if (!RM) this.tweens.add({ targets: play, scale: 1.06, yoyo: true, repeat: -1, duration: 650, ease: 'Sine.easeInOut' });
-      var sub = txt(this, 280, 652, 'Listen. Find the food.\nFill the basket!', 30, { bold: true, color: CREAM, origin: [.5, .5], align: 'center', stroke: '#1d3557', strokeW: 8 });
       muteBtn(this, W - 46, 44);
       keys(this, { ENTER: function () { play.fire(); }, SPACE: function () { play.fire(); }, Q: function () { quiz.fire(); } });
+    },
+    update: function () {
+      this.mouth.follow();
+      if (this.mode === 'awake' && this.time.now - this.last > TIRE_MS) this.tire();
+    },
+    face: function (ex) { this.keeper.setTexture('ch_keeper_' + ex); },
+    // blinks now and then; when she is tired the blinks are slow and heavy
+    blink: function () {
+      var s = this, tired = this.mode === 'tired';
+      this.time.delayedCall(tired ? 1400 + Math.random() * 1400 : 2200 + Math.random() * 2800, function () {
+        if ((s.mode === 'awake' || s.mode === 'tired') && s.keeper.texture.key === 'ch_keeper_' + s.base) {
+          var back = s.base;
+          s.face('blink');
+          s.time.delayedCall(s.mode === 'tired' ? 420 : 130, function () { if (s.keeper.texture.key === 'ch_keeper_blink') s.face(back === s.base ? back : s.base); });
+        }
+        s.blink();
+      });
+    },
+    // speech bubble to the right of her head, typed letter by letter with "bla bla"; it goes away by itself
+    say: function (text) {
+      var s = this;
+      this.hideBubble(true);
+      var x = 740, y = 246, tx = txt(this, x + 30, y + 22, text, 28, { title: true, wrap: 420, lineSpacing: 4 });
+      var full = tx.getWrappedText(text).join('\n'); tx.setWordWrapWidth(null); tx.setText(full);
+      var w = Math.max(200, tx.width + 60), h = tx.height + 44;
+      var g = this.add.graphics();
+      g.fillStyle(0x000000, .16); g.fillRoundedRect(x + 5, y + 8, w, h, 30);
+      g.fillStyle(C.paper, 1); g.fillTriangle(x + 26, y + h - 4, x + 70, y + h - 4, x - 34, y + h + 50);
+      g.lineStyle(5, C.ink, 1); g.lineBetween(x + 26, y + h, x - 34, y + h + 50); g.lineBetween(x - 34, y + h + 50, x + 70, y + h);
+      g.fillStyle(C.paper, 1); g.fillRoundedRect(x, y, w, h, 30);
+      g.lineStyle(5, C.ink, 1); g.strokeRoundedRect(x, y, w, h, 30);
+      g.fillStyle(C.paper, 1); g.fillRect(x + 29, y + h - 6, 38, 10);
+      var c = this.add.container(0, 0, [g, tx]).setDepth(40);
+      this.bubble = c;
+      if (!RM) { c.setAlpha(0); c.y = 8; this.tweens.add({ targets: c, alpha: 1, y: 0, duration: 200, ease: 'Back.easeOut' }); }
+      tx.setText('');
+      var pos = 0, last = -9, hold = 3;
+      var ev = this.time.addEvent({
+        delay: 30, loop: true, callback: function () {
+          if (hold > 0) { hold--; return; }
+          var ch = full.charAt(pos); pos++; tx.setText(full.slice(0, pos));
+          if (/[a-z0-9']/i.test(ch) && pos - last >= 3) { last = pos; babble('woman'); s.mouth.flap(); }
+          if (/[.!?]/.test(ch)) hold = 6; else if (ch === ',') hold = 3;
+          if (pos >= full.length) { ev.remove(); s.time.delayedCall(2600 + full.length * 35, function () { if (s.bubble === c) s.hideBubble(); }); }
+        }
+      });
+      c.ev = ev;
+      if (RM) { ev.remove(); tx.setText(full); this.time.delayedCall(4000, function () { if (s.bubble === c) s.hideBubble(); }); }
+    },
+    hideBubble: function (now) {
+      var c = this.bubble;
+      if (!c) return;
+      this.bubble = null;
+      if (c.ev) c.ev.remove();
+      if (now || RM) c.destroy();
+      else this.tweens.add({ targets: c, alpha: 0, y: -6, duration: 220, onComplete: function () { c.destroy(); } });
+    },
+    hop: function (dy, n) { if (!RM) this.tweens.add({ targets: this.keeper, y: KY - dy, yoyo: true, repeat: n || 0, duration: 150, ease: 'Sine.easeOut', onComplete: function (tw, tg) { tg[0].y = KY; } }); },
+    // tapped: smile and wave (or giggle when tapped again and again); wakes her up if she is asleep
+    poke: function () {
+      var s = this, now = this.time.now;
+      this.last = now;
+      if (this.mode === 'sleep' || this.mode === 'tired') { this.wake(); return; }
+      this.taps = this.taps.filter(function (t) { return now - t < 2500; }); this.taps.push(now);
+      if (this.taps.length >= 4) {
+        this.taps = [];
+        this.mode = 'hello'; this.face('happy'); this.hop(22, 1);
+        babble('woman', 1.5, 0); babble('woman', 1.7, .1); babble('woman', 1.9, .2);
+        this.say('Hee hee! That tickles!');
+      } else if (this.mode !== 'hello') {
+        this.mode = 'hello'; this.face('hello'); this.hop(16);
+        babble('woman', 1.3, 0); babble('woman', 1.5, .12);
+        this.say(pick(HELLO));
+      } else return;
+      if (this.backEv) this.backEv.remove();
+      this.backEv = this.time.delayedCall(1900, function () { s.mode = 'awake'; s.face('wait'); });
+    },
+    // nobody has touched anything for a while: she gets sleepy little by little
+    // (droopy eyes, a yawn and a stretch, heavy eyes and nodding off, then asleep with Zzz)
+    later: function (ms, fn) { var s = this; this.chain.push(this.time.delayedCall(D(ms), function () { if (s.mode === 'tired') fn(); })); },
+    tire: function () {
+      var s = this;
+      this.mode = 'tired'; this.hideBubble();
+      this.base = 'drowsy'; this.face('drowsy');
+      if (this.breath) this.breath.timeScale = .75;
+      this.later(2500, function () { s.say('Mmm... what a quiet day...'); });
+      this.later(9000, function () {
+        s.face('yawn'); SFX.yawn();
+        s.time.delayedCall(D(1800), function () { if (s.mode === 'tired') s.face(s.base); });
+      });
+      this.later(14000, function () { s.base = 'heavy'; s.face('heavy'); s.nod(); });
+      this.later(23000, function () { s.fallAsleep(); });
+    },
+    // head slowly drops... then jerks back up with the eyes open for a moment
+    nod: function () {
+      var s = this;
+      if (RM) return;
+      this.tilt = this.tweens.add({ targets: this.keeper, angle: 5, duration: 1500, ease: 'Sine.easeIn', onComplete: function () {
+        if (s.mode !== 'tired') return;
+        s.face('drowsy');
+        s.tilt = s.tweens.add({ targets: s.keeper, angle: 0, duration: 200, ease: 'Back.easeOut' });
+        s.time.delayedCall(600, function () { if (s.mode === 'tired') s.face(s.base); });
+        s.later(1700, function () { s.nod(); });
+      } });
+    },
+    fallAsleep: function () {
+      var s = this;
+      if (this.tilt) this.tilt.stop();
+      this.mode = 'sleep'; this.face('sleep');
+      if (this.breath) this.breath.timeScale = .5;
+      if (!RM) this.tilt = this.tweens.add({ targets: this.keeper, angle: 4, duration: 2000, ease: 'Sine.easeInOut' });
+      this.zzz = this.time.addEvent({ delay: 1100, loop: true, startAt: 0, callback: function () { s.letterZ(); } });
+      this.snore = this.time.addEvent({ delay: 3400, loop: true, startAt: 1000, callback: function () { SFX.snore(); } });
+    },
+    letterZ: function () {
+      var big = Math.random() < .5, z = txt(this, KX + 62 + Math.random() * 16, 292, big ? 'Z' : 'z', big ? 48 : 34, { title: true, color: '#fff7e8', origin: [.5, .5], stroke: '#1d3557', strokeW: 6 }).setDepth(30);
+      if (RM) { this.time.delayedCall(900, function () { z.destroy(); }); return; }
+      z.setScale(.5).setAlpha(0);
+      this.tweens.add({ targets: z, alpha: { from: 0, to: 1 }, duration: 300 });
+      this.tweens.add({ targets: z, x: z.x + 110 + Math.random() * 40, y: 214 + Math.random() * 16, scale: 1.25, angle: 14, duration: 2400, ease: 'Sine.easeOut' });
+      this.tweens.add({ targets: z, alpha: 0, delay: 1600, duration: 800, onComplete: function () { z.destroy(); } });
+    },
+    wake: function () {
+      var s = this, slept = this.mode === 'sleep';
+      this.chain.forEach(function (e) { e.remove(); }); this.chain = [];
+      if (this.zzz) { this.zzz.remove(); this.zzz = null; }
+      if (this.snore) { this.snore.remove(); this.snore = null; }
+      if (this.tilt) { this.tilt.stop(); this.tilt = null; }
+      if (this.breath) this.breath.timeScale = 1;
+      this.keeper.angle = 0; this.base = 'wait';
+      this.mode = 'hello'; this.face(slept ? 'greet' : 'hello'); this.hop(slept ? 30 : 16);
+      babble('woman', 1.6, 0); babble('woman', 1.2, .12);
+      this.say(slept ? pick(WAKE) : pick(HELLO));
+      if (this.backEv) this.backEv.remove();
+      this.backEv = this.time.delayedCall(2000, function () { s.mode = 'awake'; s.face('wait'); s.last = s.time.now; });
     }
   });
 
@@ -1417,17 +1808,19 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       else if (!G.opened) {
         // first customer of the day: the shop opens its shutter
         G.opened = true;
+        this.cust.setVisible(false);
         shutter(this, 'open', 'Day ' + (G.d + 1), G.day.title, function () { s.arrive(); });
       } else this.arrive();
       keys(this, { ENTER: function () { if (s.primary) s.primary.fire(); }, SPACE: function () { if (s.primary) s.primary.fire(); }, ESC: function () { confirmLeave(s, function () { go(s, 'Days'); }); } });
     },
     walk: function (fromX, toX, ms, done) {
-      var s = this, cu = this.cust;
-      cu.x = fromX;
+      var s = this, cu = this.cust, heavy = cur().ch.voice === 'man';
+      cu.x = fromX; cu.setVisible(true);
       if (RM) { cu.x = toX; done && done(); return; }
+      var steps = this.time.addEvent({ delay: 320, loop: true, callback: function () { SFX.step(heavy); } });
       var bob = this.tweens.add({ targets: cu, y: CUST_Y - 14, yoyo: true, repeat: -1, duration: 160, ease: 'Sine.easeInOut' });
       var tilt = this.tweens.add({ targets: cu, angle: { from: -2.5, to: 2.5 }, yoyo: true, repeat: -1, duration: 320, ease: 'Sine.easeInOut' });
-      this.tweens.add({ targets: cu, x: toX, duration: ms, ease: 'Sine.easeOut', onComplete: function () { bob.stop(); tilt.stop(); cu.y = CUST_Y; cu.angle = 0; done && done(); } });
+      this.tweens.add({ targets: cu, x: toX, duration: ms, ease: 'Sine.easeOut', onComplete: function () { steps.remove(); bob.stop(); tilt.stop(); cu.y = CUST_Y; cu.angle = 0; done && done(); } });
     },
     update: function () { if (this.mouth) this.mouth.follow(); },
     // speech bubble: name tag in the customer's colour, text typed letter by letter with "bla bla" and a moving mouth.
@@ -1509,6 +1902,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     },
     arrive: function () {
       var s = this, c = cur();
+      SFX.bell();
       this.walk(1150, CUST_X, 1400, function () {
         // wave hello, lower the arm, then wait smiling
         s.cust.setTexture('ch_' + c.ch.id + '_greet');
@@ -1551,9 +1945,9 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       if (this.idle) { this.idle.stop(); this.cust.scaleY = CUST_S; }
       if (!RM) this.tweens.add({ targets: this.cust, scaleY: CUST_S * 1.04, yoyo: true, duration: 140 });
       var lines;
-      if (res.errors === 0) { lines = [{ text: 'Thank you! That\'s perfect!' }]; SFX.good(); }
-      else if (res.errors === 1) { lines = [{ text: res.complaints[0], bad: true }, { text: 'Hmm... okay. Thanks.' }]; SFX.meh(); }
-      else { lines = res.complaints.map(function (t) { return { text: t, bad: true }; }); SFX.bad(); if (!RM) this.cameras.main.shake(220, .004); }
+      if (res.errors === 0) { lines = [{ text: 'Thank you! That\'s perfect!' }]; SFX.good(); babble(c.ch.voice, 1.2, .05); babble(c.ch.voice, 1.35, .16); babble(c.ch.voice, 1.55, .27); }
+      else if (res.errors === 1) { lines = [{ text: res.complaints[0], bad: true }, { text: 'Hmm... okay. Thanks.' }]; SFX.meh(); babble(c.ch.voice, .9, .05); }
+      else { lines = res.complaints.map(function (t) { return { text: t, bad: true }; }); SFX.bad(); babble(c.ch.voice, .75, .05); babble(c.ch.voice, .68, .18); if (!RM) this.cameras.main.shake(220, .004); }
       this.say(lines);
       // streak: every perfect customer in a row after the first adds a bonus (+2, +4, then +6)
       G.streak = res.errors === 0 ? G.streak + 1 : 0;
@@ -1570,6 +1964,8 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       badge.add([bg, t, lbl]);
       if (bonus) badge.add(txt(this, 90, -46, 'Streak x' + G.streak + '!  +' + bonus, 28, { title: true, color: '#ffd166', origin: [0, .5], stroke: '#5a3412', strokeW: 7 }));
       if (!RM) { badge.setScale(0); this.tweens.add({ targets: badge, scale: 1, duration: 400, ease: 'Back.easeOut' }); }
+      if (res.tip) this.time.delayedCall(D(350), function () { SFX.till(res.tip === 10 ? 5 : 2); });
+      if (bonus) this.time.delayedCall(D(800), function () { SFX.streak(G.streak); });
       if (res.tip && !RM) {
         var em = this.add.particles(860, 560, 'ui_star', { speed: { min: 180, max: 420 }, angle: { min: 200, max: 340 }, gravityY: 600, lifespan: 1100, scale: { start: .22, end: 0 }, quantity: res.tip === 10 ? 18 : 8, emitting: false }).setDepth(44);
         em.explode(res.tip === 10 ? 18 : 8);
@@ -1631,7 +2027,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
           var a = p.bodyA, b = p.bodyB, it = a.gameObject && a.gameObject.item ? a : (b.gameObject && b.gameObject.item ? b : null);
           if (!it) return;
           var v = Math.hypot(it.velocity.x, it.velocity.y);
-          if (v > 3 && now - (s.lastThud || 0) > 70) { s.lastThud = now; SFX.thud(v); }
+          if (v > 3 && now - (s.lastThud || 0) > 70) { s.lastThud = now; SFX.thud(v, it.gameObject.item.p); }
         });
       });
       // note
