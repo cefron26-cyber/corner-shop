@@ -1262,7 +1262,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
      STORAGE / SOUND / SPEECH
      ========================================================= */
   var STORE_KEY = 'cornerShop.v2';
-  // rank: top 5 per mode ('endless', 'time-0/1/2'), name: last 3 letters typed
+  // rank: top 5 per mode ('endless', 't5-0/1/2' = time attack with 5 orders), name: last 3 letters typed
   var save = { unlocked: 1, best: {}, muted: false, quizBest: {}, diff: 1, rank: {}, name: '' };
   try { var raw = localStorage.getItem(STORE_KEY); if (raw) { var o = JSON.parse(raw); if (o && typeof o === 'object') { save.unlocked = Math.min(4, Math.max(1, o.unlocked | 0 || 1)); save.best = o.best || {}; save.muted = !!o.muted; save.quizBest = o.quizBest || {}; save.diff = o.diff == null ? 1 : Math.min(2, Math.max(0, o.diff | 0)); save.rank = (o.rank && typeof o.rank === 'object') ? o.rank : {}; save.name = typeof o.name === 'string' ? o.name.slice(0, 3) : ''; } } } catch (e) { }
   function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(save)); } catch (e) { } }
@@ -1633,7 +1633,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
   function cur() { return G.orders[G.idx]; }
 
   /* ---- endless and time attack: the orders come one at a time ---- */
-  var ALL = CSD.ALL, TIME_N = 10, PENALTY = 10;
+  var ALL = CSD.ALL, TIME_N = 5, PENALTY = 10;
   function startRun(scene, mode) {
     var diff = mode === 'time' ? curDiff() : 1;
     G = { mode: mode, d: -1, diff: diff, day: mode === 'time' ? timeDay(diff) : endlessDay(0), idx: 0, points: 0, results: [], orders: [], basket: [],
@@ -1670,9 +1670,9 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
   /* ---- records: top 5 per mode, with a 3-letter name ---- */
   var RANKS = [
     { key: 'endless', title: 'Endless', color: 0x8c6bd1, high: true },
-    { key: 'time-0', title: 'Time · Easy', color: 0x3e9a5a },
-    { key: 'time-1', title: 'Time · Medium', color: C.mustard },
-    { key: 'time-2', title: 'Time · Hard', color: C.red }
+    { key: 't5-0', title: 'Time · Easy', color: 0x3e9a5a },
+    { key: 't5-1', title: 'Time · Medium', color: C.mustard },
+    { key: 't5-2', title: 'Time · Hard', color: C.red }
   ];
   function rankOf(key) { return RANKS.filter(function (r) { return r.key === key; })[0]; }
   function rankList(key) { var l = save.rank[key]; return Array.isArray(l) ? l : []; }
@@ -3156,7 +3156,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
       txt(this, W / 2, 46, 'Choose a mode', 56, { title: true, color: CREAM, origin: [.5, .5], stroke: '#1d3557', strokeW: 10 });
       var bestE = rankList('endless')[0];
       function time() {
-        diffChooser(s, 'Time Attack', ['1 or 2 things, aisle hints', '2 things, with sizes', '3 things, "no ..." and changes'], function (k) { var b = rankList('time-' + k)[0]; return b ? fmtTime(b.v) + ' (' + b.name + ')' : null; }, function () { startRun(s, 'time'); });
+        diffChooser(s, 'Time Attack', ['1 or 2 things, aisle hints', '2 things, with sizes', '3 things, "no ..." and changes'], function (k) { var b = rankList('t5-' + k)[0]; return b ? fmtTime(b.v) + ' (' + b.name + ')' : null; }, function () { startRun(s, 'time'); });
       }
       var cards = [
         [C.red, 'Shop days', 'Open the shop day by day.', 'Days open: ' + save.unlocked + ' of ' + DAYS.length, ['apple', 'milk', 'tuna'], function () { go(s, 'Days'); }],
@@ -3303,7 +3303,7 @@ html,body{margin:0;height:100%;background:#1f6966;overflow:hidden;overscroll-beh
     Extends: Phaser.Scene,
     initialize: function RunEnd() { Phaser.Scene.call(this, { key: 'RunEnd' }); },
     create: function () {
-      var s = this, endless = G.mode === 'endless', key = endless ? 'endless' : 'time-' + G.diff, r = rankOf(key);
+      var s = this, endless = G.mode === 'endless', key = endless ? 'endless' : 't5-' + G.diff, r = rankOf(key);
       var v = endless ? G.served : runMs(), place = rankPlace(key, v);
       this.cameras.main.fadeIn(D(250));
       bgImg(this, 'bg_plain');
